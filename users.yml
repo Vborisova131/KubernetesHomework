@@ -1,0 +1,29 @@
+user:
+  isAdmin: true
+  name: Ivan
+  age: 17
+  post: seller
+  skills:
+  - title: title
+    proficiency level: 2
+    description: |
+      Some multiline
+      description
+  - title: title2
+    proficiency level: 4
+    description: |
+      Some multiline
+      description
+  placeOfResidence:
+    country: Russia
+    town: some town
+    street: some street
+    house number: 123
+    apartment number: 123
+  pets:
+  - name: Sharik
+    breed: dog
+    canMeow: no
+  - name: Matroskin
+    breed: cat
+    canMeow: true
