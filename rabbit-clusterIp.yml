@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbit-app-clusterip
+spec:
+  type: ClusterIP
+  ports:
+    - port: 15672
+      name: dash
+      protocol: TCP
+    - port: 5672
+      name: app
+      protocol: TCP
+  selector:
+    component: rabbit-app
