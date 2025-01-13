@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: {{ .Values.app.name }}
+  template:
+    metadata:
+      name: {{ .Values.app.name }}
+      labels:
+        component: {{ .Values.app.name }}
+    spec:
+      containers:
+        - name: {{ .Values.app.name }}
+          image: "{{ .Values.app.image }}:{{ .Values.app.version }}"
+          ports:
+            - containerPort: {{ .Values.app.port }}
+          resources:
+            limits: {{ .Values.app.limits | toYaml | nindent 14 }}
+          env:
+            - name: {{ .Values.app.env.name }}
+              valueFrom:
+                configMapKeyRef:
+                  name: test-config
+                  key: {{ .Values.app.env.key }}
