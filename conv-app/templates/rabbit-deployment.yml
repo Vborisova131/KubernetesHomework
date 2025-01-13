@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.rabbit.name }}-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: {{ .Values.rabbit.name }}
+  template:
+    metadata:
+      name: {{ .Values.rabbit.name }}
+      labels:
+        component: {{ .Values.rabbit.name }}
+    spec:
+      containers:
+        - name: {{ .Values.rabbit.name }}
+          image: "{{ .Values.rabbit.image }}:{{ .Values.rabbit.version }}"
+          ports:
+            - containerPort: {{ .Values.rabbit.port }}
+          env:
+            {{- range .Values.rabbit.envs }}
+            {{- $data := dict "name" $.Values.api.name "env" . }}
+            {{- include "env.templateRabbit" $data | indent 12 }}
+            {{- end }}
+          resources:
+            limits: {{ .Values.rabbit.limits | toYaml | nindent 14 }}
+          volumeMounts:
+            - name: {{ .Values.rabbit.name }}-data
+              mountPath: /var/lib/rabbitmq
+      volumes:
+        - name: {{ .Values.rabbit.name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.rabbit.name }}-pvc
