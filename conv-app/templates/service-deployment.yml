@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.service.name }}-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: {{ .Values.service.name }}
+  template:
+    metadata:
+      name: {{ .Values.service.name }}
+      labels:
+        component: {{ .Values.service.name }}
+    spec:
+      containers:
+        - name: {{ .Values.service.name }}
+          image: "{{ .Values.service.image }}:{{ .Values.service.version }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            {{- range .Values.service.envs }}
+            {{- $data := dict "name" $.Values.api.name "env" .}}
+            {{- include "env.templateFromSecrets" $data | indent 12 }}
+            {{- end }}
+          resources:
+            limits: {{ .Values.app.limits | toYaml | nindent 14 }}
